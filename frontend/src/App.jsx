@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Header from './components/Header';
 import CodeEditor from './components/CodeEditor';
 import ReviewPanel from './components/ReviewPanel';
 import ComplexityAnalyzer from './components/ComplexityAnalyzer';
