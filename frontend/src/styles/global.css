@@ -1,0 +1,88 @@
+/* =====================================================
+   Global Styles — Dark & Light Mode
+   Fonts: JetBrains Mono (code) + Geist (UI)
+   ===================================================== */
+
+/* ── Dark Mode (default) ──────────────────────────── */
+:root {
+  --bg-app:      #0d1117;
+  --bg-surface:  #161b22;
+  --bg-panel:    #1c2128;
+  --bg-input:    #0d1117;
+  --bg-hover:    #21262d;
+  --border:      #30363d;
+  --border-dim:  #21262d;
+
+  --tx-primary:  #e6edf3;
+  --tx-secondary:#8b949e;
+  --tx-muted:    #484f58;
+
+  --accent:      #58a6ff;
+  --accent-dim:  rgba(88, 166, 255, 0.1);
+  --accent-glow: rgba(88, 166, 255, 0.25);
+
+  --green:       #3fb950;
+  --green-dim:   rgba(63, 185, 80, 0.1);
+  --red:         #f85149;
+  --yellow:      #e3b341;
+  --purple:      #bc8cff;
+
+  --font-ui:   'Geist', -apple-system, sans-serif;
+  --font-code: 'JetBrains Mono', monospace;
+  --r-sm: 6px; --r-md: 8px; --r-lg: 12px; --r-xl: 16px;
+
+  /* Theme toggle button colors */
+  --toggle-bg:     #21262d;
+  --toggle-border: #30363d;
+  --toggle-icon:   #e6edf3;
+}
+
+/* ── Light Mode — applied via .light-mode on body ─── */
+body.light-mode {
+  --bg-app:      #f6f8fa;
+  --bg-surface:  #ffffff;
+  --bg-panel:    #ffffff;
+  --bg-input:    #f6f8fa;
+  --bg-hover:    #f0f2f4;
+  --border:      #d0d7de;
+  --border-dim:  #e8ecf0;
+
+  --tx-primary:  #1f2328;
+  --tx-secondary:#636c76;
+  --tx-muted:    #a0aab4;
+
+  --accent:      #0969da;
+  --accent-dim:  rgba(9, 105, 218, 0.08);
+  --accent-glow: rgba(9, 105, 218, 0.2);
+
+  --green:       #1a7f37;
+  --green-dim:   rgba(26, 127, 55, 0.1);
+  --red:         #cf222e;
+  --yellow:      #9a6700;
+  --purple:      #8250df;
+
+  --toggle-bg:     #ffffff;
+  --toggle-border: #d0d7de;
+  --toggle-icon:   #1f2328;
+}
+
+/* ── Reset ────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; }
+
+body {
+  background: var(--bg-app);
+  color: var(--tx-primary);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* ── Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--tx-muted); }
+::selection { background: var(--accent-dim); color: var(--tx-primary); }
