@@ -4,6 +4,8 @@ WORKDIR /app
 COPY frontend/package.json ./frontend/
 RUN cd frontend && npm install
 COPY frontend/ ./frontend/
+# Disable source maps — smaller build, faster Docker build
+ENV GENERATE_SOURCEMAP=false
 RUN cd frontend && npm run build
 
 # ── Stage 2: Build Spring Boot JAR ─────────────────
@@ -12,7 +14,7 @@ WORKDIR /app
 COPY backend/pom.xml ./backend/
 RUN cd backend && mvn dependency:go-offline -B
 COPY backend/src ./backend/src
-# Copy React build output into Spring Boot static folder
+# Copy React build into Spring Boot static folder
 COPY --from=frontend-build /app/frontend/build ./backend/src/main/resources/static/
 RUN cd backend && mvn clean package -DskipTests
 
