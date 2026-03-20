@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CodeEditor from './components/CodeEditor';
 import ReviewPanel from './components/ReviewPanel';
 import ComplexityAnalyzer from './components/ComplexityAnalyzer';
-import PromptGeneratorPage from './pages/PromptGeneratorPage';
+import PromptGeneratorPage from './components/PromptGeneratorPage';
 import { useReview } from './hooks/useReview';
 import { useTheme } from './hooks/useTheme';
 import { usePromptGenerator } from './hooks/usePromptGenerator';
