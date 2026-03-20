@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
+import Header from './components/Header';
 import CodeEditor from './components/CodeEditor';
 import ReviewPanel from './components/ReviewPanel';
 import ComplexityAnalyzer from './components/ComplexityAnalyzer';
-import PromptGeneratorPage from './components/PromptGeneratorPage';
+import PromptGeneratorPage from './pages/PromptGeneratorPage';
 import { useReview } from './hooks/useReview';
 import { useTheme } from './hooks/useTheme';
+import { usePromptGenerator } from './hooks/usePromptGenerator';
 
 export default function App() {
   const [activePage, setActivePage] = useState('assistant');
   const [activeTab,  setActiveTab]  = useState('review');
   const [code, setCode] = useState('');
+
   const { review, isLoading, error, handleReview } = useReview();
   const { isDark, toggleTheme } = useTheme();
+  const promptState = usePromptGenerator();
+
+  // Also persist the prompt input text across page switches
+  const [promptInput, setPromptInput] = useState('');
 
   return (
     <div style={{ height:'100vh', display:'flex', flexDirection:'column', background:'var(--bg-app)' }}>
@@ -34,6 +41,7 @@ export default function App() {
           </div>
           <div>
             <div style={{ fontSize:'14px', fontWeight:600, color:'var(--tx-primary)', letterSpacing:'-0.2px' }}>AI Dev Tools</div>
+            <div style={{ fontSize:'11px', color:'var(--tx-muted)', fontFamily:'var(--font-code)' }}>Spring Boot + Gemini</div>
           </div>
         </div>
 
@@ -59,36 +67,23 @@ export default function App() {
 
         {/* Right: Status + Theme toggle */}
         <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
-
-          {/* Theme toggle button */}
-          <button
-            onClick={toggleTheme}
-            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            style={{
-              width: '34px', height: '34px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'var(--toggle-bg)',
-              border: '1px solid var(--toggle-border)',
-              borderRadius: 'var(--r-md)',
-              cursor: 'pointer',
-              fontSize: '16px',
-              transition: 'all 0.2s',
-              flexShrink: 0,
-            }}
+          <span style={{ fontSize:'11px', fontFamily:'var(--font-code)', color:'var(--green)', background:'var(--green-dim)', border:'1px solid rgba(63,185,80,0.2)', padding:'3px 10px', borderRadius:'100px', display:'flex', alignItems:'center', gap:'5px' }}>
+            <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:'var(--green)', boxShadow:'0 0 6px var(--green)', display:'inline-block', animation:'hbPulse 2s ease-in-out infinite' }} />
+            live
+          </span>
+          <button onClick={toggleTheme} title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            style={{ width:'34px', height:'34px', display:'flex', alignItems:'center', justifyContent:'center', background:'var(--toggle-bg)', border:'1px solid var(--toggle-border)', borderRadius:'var(--r-md)', cursor:'pointer', fontSize:'16px', transition:'all 0.2s', flexShrink:0 }}
             onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
-            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--toggle-border)'}
-          >
+            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--toggle-border)'}>
             {isDark ? '☀️' : '🌙'}
           </button>
         </div>
-
         <style>{`@keyframes hbPulse{0%,100%{opacity:1}50%{opacity:.4}}`}</style>
       </header>
 
       {/* ── PAGE: Code Assistant ── */}
       {activePage === 'assistant' && (
         <>
-          {/* Tab bar */}
           <div style={{ display:'flex', gap:'4px', padding:'8px 1.5rem 0', background:'var(--bg-surface)', borderBottom:'1px solid var(--border-dim)', flexShrink:0 }}>
             {[
               { key:'review',     label:'⎆ Code Review' },
@@ -107,7 +102,6 @@ export default function App() {
             ))}
           </div>
 
-          {/* Two-panel workspace */}
           <main style={{ flex:1, display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1rem', padding:'1rem 1.5rem', minHeight:0 }}>
             <CodeEditor
               value={code}
@@ -128,7 +122,15 @@ export default function App() {
       {/* ── PAGE: Prompt Generator ── */}
       {activePage === 'prompt' && (
         <div style={{ flex:1, display:'flex', overflow:'auto' }}>
-          <PromptGeneratorPage />
+          {/*
+           * FIX 1: Pass promptState and promptInput down as props
+           * FIX 2: Pass onBack so PromptGeneratorPage can show a back button
+           */}
+          <PromptGeneratorPage
+            promptState={promptState}
+            promptInput={promptInput}
+            setPromptInput={setPromptInput}
+          />
         </div>
       )}
 
@@ -138,7 +140,7 @@ export default function App() {
           AI Dev Tools · Code Assistant + Prompt Generator
         </span>
         <span style={{ fontSize:'11px', color:'var(--tx-muted)', fontFamily:'var(--font-code)' }}>
-          {isDark ? '🌙 Dark' : '☀️ Light'} Mode
+          {activePage === 'assistant' ? 'Ctrl+Enter to analyze' : 'Ctrl+Enter to generate'} · {isDark ? '🌙 Dark' : '☀️ Light'} Mode
         </span>
       </footer>
     </div>
