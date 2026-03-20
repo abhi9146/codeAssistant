@@ -34,7 +34,7 @@ build/
 
 
 # ── Maven compiled output ──
-target/
+# target/
 
 # ── React files copied here during build — never commit these ──
 src/main/resources/static/
