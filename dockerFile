@@ -1,26 +1,38 @@
 # ── Stage 1: Build React frontend ──────────────────
 FROM node:18-alpine AS frontend-build
 WORKDIR /app
+
+# Copy and fix filename inside container
 COPY frontend/Package.json ./frontend/
+RUN mv ./frontend/Package.json ./frontend/package.json
+
 RUN cd frontend && npm install
+
 COPY frontend/ ./frontend/
-# Disable source maps — smaller build, faster Docker build
 ENV GENERATE_SOURCEMAP=false
 RUN cd frontend && npm run build
+
 
 # ── Stage 2: Build Spring Boot JAR ─────────────────
 FROM maven:3.9.6-eclipse-temurin-17 AS backend-build
 WORKDIR /app
+
 COPY backend/pom.xml ./backend/
 RUN cd backend && mvn dependency:go-offline -B
+
 COPY backend/src ./backend/src
+
 # Copy React build into Spring Boot static folder
 COPY --from=frontend-build /app/frontend/build ./backend/src/main/resources/static/
+
 RUN cd backend && mvn clean package -DskipTests
+
 
 # ── Stage 3: Run the final JAR ──────────────────────
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
+
 COPY --from=backend-build /app/backend/target/backend-1.0.0.jar app.jar
+
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
