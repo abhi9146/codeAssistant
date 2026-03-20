@@ -1,7 +1,7 @@
 # ── Stage 1: Build React frontend ──────────────────
 FROM node:18-alpine AS frontend-build
 WORKDIR /app
-COPY frontend/package.json ./frontend/
+COPY frontend/Package.json ./frontend/
 RUN cd frontend && npm install
 COPY frontend/ ./frontend/
 # Disable source maps — smaller build, faster Docker build
